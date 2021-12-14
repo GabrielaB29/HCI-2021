@@ -36,61 +36,68 @@ const Student = ({ name, lName, imgSrc }) => {
 };
 
 const StateDemo = () => {
-    const [name, setName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [students, setStudents] = useState(studentsOut);
-    // Conditional Rendering
-    const [showStudents, setShowStudents] = useState(false);
+    const [newStudent, setNewStudent] = useState({
+        name: '',
+        lName: '',
+        imgSrc: '/profile.jpg',
+    });
+    const [showStudents, setShowStudents] = useState(true);
 
     return (
         <main>
             <h1 className="text-center mt-5 mb-5 font-bold text-4xl underline">
                 Welcome to state demo!
             </h1>
-            <ul
-                className={`${
-                    showStudents ? '' : 'opacity-0'
-                } flex flex-col items-center justify-around`}
-            >
-                {students.map((el) => (
-                    <Student key={el.id} {...el} />
-                ))}
-            </ul>
+            {showStudents ? (
+                <ul className="flex flex-col items-center justify-around">
+                    {students.map((el) => (
+                        <Student key={el.id} {...el} />
+                    ))}
+                </ul>
+            ) : (
+                <p className="text-center">No students, sorry</p>
+            )}
             <section className="flex flex-col w-64 justify-center items-center my-0 mx-auto border-gray-500">
                 <input
+                    value={newStudent.name}
+                    onChange={(e) =>
+                        setNewStudent({ ...newStudent, name: e.target.value })
+                    }
                     className="border-b-2 outline-none mt-5 border-solid border-gray-500"
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
                     placeholder="Name"
                 />
                 <input
+                    value={newStudent.lName}
+                    onChange={(e) =>
+                        setNewStudent({ ...newStudent, lName: e.target.value })
+                    }
                     className="border-b-2 outline-none mt-5 border-solid border-gray-500"
                     type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last name"
                 />
                 <button
                     onClick={() => {
-                        const newStudent = {
-                            name,
-                            lName: lastName,
-                            imgSrc: '/profile.jpg',
-                        };
-                        setStudents([...students, newStudent]);
+                        setStudents([
+                            ...students,
+                            {
+                                ...newStudent,
+                                id: newStudent.name + newStudent.lName,
+                            },
+                        ]);
                     }}
-                    className="mt-5 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    className="my-5 cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 >
                     Submit
                 </button>
-                <button
-                    onClick={() => setShowStudents(!showStudents)}
-                    className="mt-5 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                >
-                    Toggle
-                </button>
             </section>
+            <button
+                onClick={() => setShowStudents(!showStudents)}
+                className="block mx-auto cursor-pointer bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
+            >
+                Toggle
+            </button>
         </main>
     );
 };
